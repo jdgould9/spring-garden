@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GardenZoneRepository extends JpaRepository<GardenZone, Long> {
-    //Find all garden zones by a garden
     List<GardenZone> findAllByGarden(Garden garden);
-    //Find a garden zone by a garden zone Id and a garden
+
     Optional<GardenZone> findByGardenZoneIdAndGarden(Long gardenZoneId, Garden garden);
 }

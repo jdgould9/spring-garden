@@ -2,6 +2,7 @@
 //Represents a single plant within a garden
 package net.jdgould.spring_garden.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ public class Plant {
     private String plantName;
 
     @ManyToOne
+    @JsonIgnore
     private GardenZone gardenZone;
 
     @Embedded

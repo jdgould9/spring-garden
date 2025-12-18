@@ -2,6 +2,7 @@
 //Represents a zone of a garden containing plant(s)
 package net.jdgould.spring_garden.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class GardenZone {
     private List<Plant> plants = new ArrayList<>();
 
     @ManyToOne
+    @JsonIgnore
     private Garden garden;
 
     @Embedded

@@ -37,4 +37,8 @@ public class Garden {
     public String getGardenName(){
         return this.gardenName;
     }
+
+    public List<GardenZone> getGardenZones() {
+        return gardenZones;
+    }
 }

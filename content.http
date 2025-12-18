@@ -1,16 +1,51 @@
-### Add a garden
+###Garden 1
+
+### Add a garden 1
 POST http://localhost:8080/api/gardens
 Content-Type: application/json
 
 {
-    "gardenName":"My Garden!"
+    "gardenName":"Garden 1"
 }
 
-### Add a zone
+### Add a zone 1 to garden 1
 POST http://localhost:8080/api/gardens/1/zones
 Content-Type: application/json
 
 {
-    "gardenZoneName":"Zone 2"
+    "gardenZoneName":"Zone 1 in garden 1"
 }
 
+### Add a plant 1 to zone 1 in garden 1
+POST http://localhost:8080/api/gardens/1/zones/1/plants
+Content-Type: application/json
+
+{
+    "plantName":"Plant 1 in zone 1"
+}
+
+###Garden 2
+
+### Add a garden 2
+POST http://localhost:8080/api/gardens
+Content-Type: application/json
+
+{
+    "gardenName":"Garden 2"
+}
+
+### Add a zone 1 to garden 2
+POST http://localhost:8080/api/gardens/2/zones
+Content-Type: application/json
+
+{
+    "gardenZoneName":"Zone 1 in garden 2"
+}
+
+### Add a plant 1 to zone 1 in garden 2
+POST http://localhost:8080/api/gardens/2/zones/2/plants
+Content-Type: application/json
+
+{
+    "plantName":"Plant 1 in zone 1"
+}

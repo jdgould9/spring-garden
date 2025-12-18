@@ -21,6 +21,11 @@ public class SpringGardenApplication {
     }
     // TODO: Split Controller into multiple controllers
     // TODO: Create DTOs for entities to map into, as records
+        //Need: CreationDTO (for more complex Plant, GardenZone, Garden if necessary)
+        //Need: ResponseDTO (for JSON responses)
+    // TODO: Remove JsonIgnore from bidirectional relationships in Plant and GardenZone
+        //This was only done to stop JSON recursion from occurring because I don't have DTOs implemented
+    // TODO: Services should not throw HTTPStatus exceptions: Only controller should.
 
     @Bean
     CommandLineRunner commandLineRunner(PlantRepository repository) {
