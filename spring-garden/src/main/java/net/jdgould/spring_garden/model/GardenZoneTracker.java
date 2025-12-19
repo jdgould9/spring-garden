@@ -38,28 +38,22 @@ public class GardenZoneTracker {
     }
 
     //EVENT HANDLERS
-    public void recordWeeding(LocalDateTime time, String details) {
-        weedingHistory.add(new TrackerEvent(time, details));
+    protected TrackerEvent recordWeeding(String details) {
+        TrackerEvent event = new TrackerEvent(LocalDateTime.now(), details);
+        weedingHistory.add(event);
+        return event;
     }
 
-    public void recordWeeding(String details) {
-        weedingHistory.add(new TrackerEvent(LocalDateTime.now(), details));
+    protected TrackerEvent recordSoilPhTesting(String details) {
+        TrackerEvent event = new TrackerEvent(LocalDateTime.now(), details);
+        soilPhHistory.add(event);
+        return event;
     }
 
-    public void recordSoilPhTesting(LocalDateTime time, String details) {
-        soilPhHistory.add(new TrackerEvent(time, details));
-    }
-
-    public void recordSoilPhTesting(String details) {
-        soilPhHistory.add(new TrackerEvent(LocalDateTime.now(), details));
-    }
-
-    public void recordSoilMoistureTesting(LocalDateTime time, String details) {
-        soilMoistureHistory.add(new TrackerEvent(time, details));
-    }
-
-    public void recordSoilMoistureTesting(String details) {
-        soilMoistureHistory.add(new TrackerEvent(LocalDateTime.now(), details));
+    protected TrackerEvent recordSoilMoistureTesting(String details) {
+        TrackerEvent event = new TrackerEvent(LocalDateTime.now(), details);
+        soilMoistureHistory.add(event);
+        return event;
     }
 
     //GETTERS

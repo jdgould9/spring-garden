@@ -3,6 +3,8 @@ package net.jdgould.spring_garden.controller;
 import net.jdgould.spring_garden.dto.plant.PlantCreationRequestDTO;
 import net.jdgould.spring_garden.dto.plant.PlantCreationResponseDTO;
 import net.jdgould.spring_garden.dto.plant.PlantGetResponseDTO;
+import net.jdgould.spring_garden.dto.tracker.PlantTrackerEventCreationRequestDTO;
+import net.jdgould.spring_garden.dto.tracker.TrackerEventCreationResponseDTO;
 import net.jdgould.spring_garden.model.Plant;
 import net.jdgould.spring_garden.service.PlantService;
 import org.springframework.http.HttpStatus;
@@ -29,13 +31,27 @@ public class PlantController {
 
     //Get plant by plant Id and garden zone Id and garden Id
     @GetMapping("/{plantId}")
-    public PlantGetResponseDTO getPlantById(@PathVariable("gardenId")  Long gardenId, @PathVariable("gardenZoneId") Long gardenZoneId, @PathVariable("plantId") Long plantId){
+    public PlantGetResponseDTO getPlantById(@PathVariable("gardenId")  Long gardenId,
+                                            @PathVariable("gardenZoneId") Long gardenZoneId,
+                                            @PathVariable("plantId") Long plantId){
         return plantService.findPlantInZoneById(gardenId, gardenZoneId, plantId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Garden not found"));
     }
 
     //Create plant
     @PostMapping("")
-    public PlantCreationResponseDTO createPlant(@PathVariable("gardenId")  Long gardenId, @PathVariable("gardenZoneId") Long gardenZoneId, @RequestBody PlantCreationRequestDTO plantCreationRequestDTO){
-        return plantService.addPlantToGardenZone(gardenId, gardenZoneId, plantCreationRequestDTO);
+    public PlantCreationResponseDTO createPlant(@PathVariable("gardenId")  Long gardenId,
+                                                @PathVariable("gardenZoneId") Long gardenZoneId,
+                                                @RequestBody PlantCreationRequestDTO request){
+        return plantService.addPlantToGardenZone(gardenId, gardenZoneId, request);
+    }
+
+    //Record tracker event
+    @PostMapping("/{plantId}/tracker")
+    public TrackerEventCreationResponseDTO recordTrackerEvent(@PathVariable("gardenId") Long gardenId,
+                                                              @PathVariable("gardenZoneId") Long gardenZoneId,
+                                                              @PathVariable("plantId") Long plantId,
+                                                              @RequestBody PlantTrackerEventCreationRequestDTO request){
+        return plantService.recordEvent(gardenId, gardenZoneId, plantId, request);
+
     }
 }

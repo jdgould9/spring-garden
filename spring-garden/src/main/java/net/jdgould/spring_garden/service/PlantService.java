@@ -4,8 +4,12 @@ import net.jdgould.spring_garden.dto.plant.PlantCreationRequestDTO;
 import net.jdgould.spring_garden.dto.plant.PlantCreationResponseDTO;
 import net.jdgould.spring_garden.dto.plant.PlantGetResponseDTO;
 import net.jdgould.spring_garden.dto.tracker.PlantTrackerDTO;
+import net.jdgould.spring_garden.dto.tracker.PlantTrackerEventCreationRequestDTO;
+
+import net.jdgould.spring_garden.dto.tracker.TrackerEventCreationResponseDTO;
 import net.jdgould.spring_garden.model.GardenZone;
 import net.jdgould.spring_garden.model.Plant;
+import net.jdgould.spring_garden.model.TrackerEvent;
 import net.jdgould.spring_garden.repository.PlantRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +29,7 @@ public class PlantService {
     public List<PlantGetResponseDTO> findAllPlantsInZone(Long gardenId, Long gardenZoneId) {
         GardenZone gardenZone = gardenZoneService.findGardenZoneEntityById(gardenZoneId, gardenId).get();//.orElseThrow(()
         //->new ResponseStatusException(HttpStatus.NOT_FOUND));
+
         return plantRepository.findAllByGardenZone(gardenZone).stream()
                 .map(this::entityToGetResponseDTO)
                 .toList();
@@ -33,15 +38,28 @@ public class PlantService {
     public Optional<PlantGetResponseDTO> findPlantInZoneById(Long gardenId, Long gardenZoneId, Long plantId) {
         GardenZone gardenZone = gardenZoneService.findGardenZoneEntityById(gardenZoneId, gardenId).get();//.orElseThrow(()
         //->new ResponseStatusException(HttpStatus.NOT_FOUND));
+
         return plantRepository.findByPlantIdAndGardenZone(plantId, gardenZone)
                 .map(this::entityToGetResponseDTO);
     }
 
-    public PlantCreationResponseDTO addPlantToGardenZone(Long gardenId, Long gardenZoneId, PlantCreationRequestDTO plantCreationRequestDTO) {
+    public PlantCreationResponseDTO addPlantToGardenZone(Long gardenId, Long gardenZoneId, PlantCreationRequestDTO request) {
         GardenZone gardenZone = gardenZoneService.findGardenZoneEntityById(gardenZoneId, gardenId).get();//.orElseThrow(()
         //->new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Plant savedPlant = plantRepository.save(new Plant(gardenZone, plantCreationRequestDTO.plantName()));
+
+        Plant savedPlant = plantRepository.save(new Plant(gardenZone, request.plantName()));
         return new PlantCreationResponseDTO(savedPlant.getPlantId());
+    }
+
+    public TrackerEventCreationResponseDTO recordEvent(Long gardenId, Long gardenZoneId, Long plantId, PlantTrackerEventCreationRequestDTO request) {
+        GardenZone gardenZone = gardenZoneService.findGardenZoneEntityById(gardenZoneId, gardenId).get();//.orElseThrow(()
+        //->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Plant plant = plantRepository.findByPlantIdAndGardenZone(plantId, gardenZone).get();//.orElseThrow(()
+        //->new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        TrackerEvent event = plant.recordEvent(request.plantTrackerEventType(), request.details());
+        plantRepository.save(plant);
+        return new TrackerEventCreationResponseDTO(event.getTime());
     }
 
     /// HELPERS
@@ -52,5 +70,7 @@ public class PlantService {
                 new PlantTrackerDTO(plant.getTracker())
         );
     }
+
+
 }
 

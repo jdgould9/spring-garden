@@ -35,7 +35,7 @@ public class GardenController {
 
     //Create garden
     @PostMapping("")
-    public GardenCreationResponseDTO createGarden(@RequestBody GardenCreationRequestDTO gardenCreationRequestDTO) {
-        return gardenService.addGarden(gardenCreationRequestDTO);
+    public GardenCreationResponseDTO createGarden(@RequestBody GardenCreationRequestDTO request) {
+        return gardenService.addGarden(request);
     }
 }

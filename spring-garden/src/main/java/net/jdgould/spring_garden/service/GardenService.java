@@ -32,12 +32,12 @@ public class GardenService {
                 .map(this::entityToGetResponseDTO);
     }
 
-    public GardenCreationResponseDTO addGarden(GardenCreationRequestDTO gardenCreationRequestDTO) {
-        Garden savedGarden = gardenRepository.save(new Garden(gardenCreationRequestDTO.gardenName()));
+    public GardenCreationResponseDTO addGarden(GardenCreationRequestDTO request) {
+        Garden savedGarden = gardenRepository.save(new Garden(request.gardenName()));
         return new GardenCreationResponseDTO(savedGarden.getGardenId());
     }
 
-    /// HELPERS
+    //HELPERS
     private GardenGetResponseDTO entityToGetResponseDTO(Garden garden) {
         return new GardenGetResponseDTO(
                 garden.getGardenId(),

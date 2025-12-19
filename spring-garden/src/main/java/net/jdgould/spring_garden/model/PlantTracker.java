@@ -4,6 +4,7 @@ package net.jdgould.spring_garden.model;
 
 import jakarta.persistence.*;
 
+import javax.sound.midi.Track;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,36 +44,28 @@ public class PlantTracker {
     }
 
     //EVENT HANDLERS
-    public void recordWatering(LocalDateTime time, String details) {
-        wateringHistory.add(new TrackerEvent(time, details));
+    public TrackerEvent recordWatering(String details) {
+        TrackerEvent event = new TrackerEvent(LocalDateTime.now(), details);
+        wateringHistory.add(event);
+        return event;
     }
 
-    public void recordWatering(String details) {
-        wateringHistory.add(new TrackerEvent(LocalDateTime.now(), details));
-    }
-
-    public void recordFertilization(LocalDateTime time, String details) {
-        fertilizationHistory.add(new TrackerEvent(time, details));
-    }
-
-    public void recordFertilization(String details) {
+    protected TrackerEvent recordFertilization(String details) {
+        TrackerEvent event = new TrackerEvent(LocalDateTime.now(), details);
         fertilizationHistory.add(new TrackerEvent(LocalDateTime.now(), details));
+        return event;
     }
 
-    public void recordPruning(LocalDateTime time, String details) {
-        pruningHistory.add(new TrackerEvent(time, details));
-    }
-
-    public void recordPruning(String details) {
+    protected TrackerEvent recordPruning(String details) {
+        TrackerEvent event = new TrackerEvent(LocalDateTime.now(), details);
         pruningHistory.add(new TrackerEvent(LocalDateTime.now(), details));
+        return event;
     }
 
-    public void recordPestTreatment(LocalDateTime time, String details) {
-        pestTreatmentHistory.add(new TrackerEvent(time, details));
-    }
-
-    public void recordPestTreatment(String details) {
+    protected TrackerEvent recordPestTreatment(String details) {
+        TrackerEvent event = new TrackerEvent(LocalDateTime.now(), details);
         pestTreatmentHistory.add(new TrackerEvent(LocalDateTime.now(), details));
+        return event;
     }
 
     //GETTERS

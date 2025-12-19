@@ -34,36 +34,13 @@ public class Plant {
     }
 
     //EVENT HANDLERS (DELEGATION)
-    public void water(LocalDateTime time, String details) {
-        plantTracker.recordWatering(time, details);
-    }
-
-    public void water(String details) {
-        plantTracker.recordWatering(details);
-    }
-
-    public void fertilize(LocalDateTime time, String details) {
-        plantTracker.recordFertilization(time, details);
-    }
-
-    public void fertilize(String details) {
-        plantTracker.recordFertilization(details);
-    }
-
-    public void prune(LocalDateTime time, String details) {
-        plantTracker.recordPruning(time, details);
-    }
-
-    public void prune(String details) {
-        plantTracker.recordPruning(details);
-    }
-
-    public void pestTreatment(LocalDateTime time, String details) {
-        plantTracker.recordPestTreatment(time, details);
-    }
-
-    public void pestTreatment(String details) {
-        plantTracker.recordPestTreatment(details);
+    public TrackerEvent recordEvent(PlantTrackerEventType eventType, String details) {
+        return switch(eventType){
+            case WATER ->plantTracker.recordWatering(details);
+            case FERTILIZE -> plantTracker.recordFertilization(details);
+            case PRUNE -> plantTracker.recordPruning(details);
+            case PEST_TREATMENT -> plantTracker.recordPestTreatment(details);
+        };
     }
 
     //SETTERS
@@ -85,43 +62,9 @@ public class Plant {
     }
 
     //TRACKER GETTERS
-    public LocalDateTime getCreationDate() {
-        return plantTracker.getCreationDate();
-    }
-
-    public List<TrackerEvent> getWateringHistory() {
-        return plantTracker.getWateringHistory();
-    }
-
-    public Optional<TrackerEvent> getLastWateringEvent() {
-        return TrackerEvent.getMostRecentEvent(plantTracker.getWateringHistory());
-    }
-
-    public List<TrackerEvent> getFertilizationHistory() {
-        return plantTracker.getFertilizationHistory();
-    }
-
-    public Optional<TrackerEvent> getLastFertilizationEvent() {
-        return TrackerEvent.getMostRecentEvent(plantTracker.getFertilizationHistory());
-    }
-
-    public List<TrackerEvent> getPruningHistory() {
-        return plantTracker.getPruningHistory();
-    }
-
-    public Optional<TrackerEvent> getLastPruningEvent() {
-        return TrackerEvent.getMostRecentEvent(plantTracker.getPruningHistory());
-    }
-
-    public List<TrackerEvent> getPestTreatmentHistory() {
-        return plantTracker.getPestTreatmentHistory();
-    }
-
-    public Optional<TrackerEvent> getLastPestTreatmentEvent() {
-        return TrackerEvent.getMostRecentEvent(plantTracker.getPestTreatmentHistory());
-    }
-
     public PlantTracker getTracker() {
         return this.plantTracker;
     }
+
+
 }

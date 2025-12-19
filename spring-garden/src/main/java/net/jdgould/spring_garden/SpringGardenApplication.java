@@ -19,13 +19,14 @@ public class SpringGardenApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringGardenApplication.class, args);
     }
-    // TODO: Create DTOs for entities to map into, as records
-        //Need: CreationDTO (for more complex Plant, GardenZone, Garden if necessary)
-        //Need: ResponseDTO (for JSON responses)
-        //Need: SummaryDTO (for use in other DTOs)
     // TODO: Remove JsonIgnore from bidirectional relationships in Plant and GardenZone
         //This was only done to stop JSON recursion from occurring because I don't have DTOs implemented
     // TODO: Services should not throw HTTPStatus exceptions: Only controller should.
+    // TODO: Implement API endpoints for garden zone and plant tracker functionality
+        //Record events
+        //Get all events
+        //Get most recent event
+    //TODO: See PlantService for fixing event recording
 
     @Bean
     CommandLineRunner commandLineRunner(PlantRepository repository) {

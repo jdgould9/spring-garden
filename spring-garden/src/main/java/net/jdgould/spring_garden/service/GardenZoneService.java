@@ -5,8 +5,12 @@ import net.jdgould.spring_garden.dto.gardenzone.GardenZoneCreationResponseDTO;
 import net.jdgould.spring_garden.dto.gardenzone.GardenZoneGetResponseDTO;
 import net.jdgould.spring_garden.dto.plant.PlantSummaryDTO;
 import net.jdgould.spring_garden.dto.tracker.GardenZoneTrackerDTO;
+import net.jdgould.spring_garden.dto.tracker.GardenZoneTrackerEventCreationRequestDTO;
+import net.jdgould.spring_garden.dto.tracker.TrackerEventCreationResponseDTO;
 import net.jdgould.spring_garden.model.Garden;
 import net.jdgould.spring_garden.model.GardenZone;
+import net.jdgould.spring_garden.model.GardenZoneTrackerEventType;
+import net.jdgould.spring_garden.model.TrackerEvent;
 import net.jdgould.spring_garden.repository.GardenZoneRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,14 +41,28 @@ public class GardenZoneService {
                 .map(this::entityToGetResponseDTO);
     }
 
-    public GardenZoneCreationResponseDTO addGardenZoneToGarden(Long gardenId, GardenZoneCreationRequestDTO gardenZoneCreationRequestDTO) {
+    public GardenZoneCreationResponseDTO addGardenZoneToGarden(Long gardenId, GardenZoneCreationRequestDTO requestDTO) {
         Garden garden = gardenService.findGardenEntityById(gardenId).get();//.orElseThrow(()
         //-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Garden not found"));
-        GardenZone savedGardenZone = gardenZoneRepository.save(new GardenZone(garden, gardenZoneCreationRequestDTO.gardenZoneName()));
+
+        GardenZone savedGardenZone = gardenZoneRepository.save(new GardenZone(garden, requestDTO.gardenZoneName()));
         return new GardenZoneCreationResponseDTO(savedGardenZone.getGardenZoneId());
     }
 
-    /// HELPERS
+    public TrackerEventCreationResponseDTO recordEvent(Long gardenId, Long gardenZoneId, GardenZoneTrackerEventCreationRequestDTO request) {
+        Garden garden = gardenService.findGardenEntityById(gardenId).get();//.orElseThrow(()
+        //-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Garden not found"));
+        GardenZone gardenZone = gardenZoneRepository.findByGardenZoneIdAndGarden(gardenZoneId, garden).get();//.orElseThrow(()
+        //->new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        TrackerEvent event = gardenZone.recordEvent(
+                request.gardenZoneTrackerEventType(), request.details()
+        );
+        gardenZoneRepository.save(gardenZone);
+        return new TrackerEventCreationResponseDTO(event.getTime());
+    }
+
+    //HELPERS
     private GardenZoneGetResponseDTO entityToGetResponseDTO(GardenZone gardenZone) {
         return new GardenZoneGetResponseDTO(
                 gardenZone.getGardenZoneId(),

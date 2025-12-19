@@ -24,6 +24,34 @@ Content-Type: application/json
     "plantName":"Plant 1 in zone 1 in garden 1"
 }
 
+### Record a plant tracker event
+POST http://localhost:8080/api/gardens/1/zones/1/plants/1/tracker
+Content-Type: application/json
+
+{
+    "plantTrackerEventType":"PEST_TREATMENT",
+    "details":"I pest treated."
+}
+
+### Record a garden zone tracker event
+POST http://localhost:8080/api/gardens/1/zones/1/tracker
+Content-Type: application/json
+
+{
+    "gardenZoneTrackerEventType":"TEST_SOIL_PH",
+    "details":"I tested my soil moisture."
+}
+
+### Record a garden zone tracker event
+POST http://localhost:8080/api/gardens/1/zones/1/tracker
+Content-Type: application/json
+
+{
+    "eventType":"TEST_SOIL_MOISTURE",
+    "details":"I tested my soil moisture."
+}
+
+
 ###Garden 2
 
 ### Add a garden 2

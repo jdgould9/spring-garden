@@ -3,6 +3,8 @@ package net.jdgould.spring_garden.controller;
 import net.jdgould.spring_garden.dto.gardenzone.GardenZoneCreationRequestDTO;
 import net.jdgould.spring_garden.dto.gardenzone.GardenZoneCreationResponseDTO;
 import net.jdgould.spring_garden.dto.gardenzone.GardenZoneGetResponseDTO;
+import net.jdgould.spring_garden.dto.tracker.GardenZoneTrackerEventCreationRequestDTO;
+import net.jdgould.spring_garden.dto.tracker.TrackerEventCreationResponseDTO;
 import net.jdgould.spring_garden.model.GardenZone;
 import net.jdgould.spring_garden.service.GardenService;
 import net.jdgould.spring_garden.service.GardenZoneService;
@@ -37,7 +39,16 @@ public class GardenZoneController {
 
     //Create garden zone
     @PostMapping("")
-    public GardenZoneCreationResponseDTO createGardenZone(@PathVariable("gardenId") Long gardenId, @RequestBody GardenZoneCreationRequestDTO gardenZoneCreationRequestDTO) {
-        return gardenZoneService.addGardenZoneToGarden(gardenId, gardenZoneCreationRequestDTO);
+    public GardenZoneCreationResponseDTO createGardenZone(@PathVariable("gardenId") Long gardenId, @RequestBody GardenZoneCreationRequestDTO request) {
+        return gardenZoneService.addGardenZoneToGarden(gardenId, request);
+    }
+
+    //Record tracker event
+    @PostMapping("{gardenZoneId}/tracker")
+    public TrackerEventCreationResponseDTO recordTrackerEvent(@PathVariable("gardenId") Long gardenId,
+                                                              @PathVariable("gardenZoneId") Long gardenZoneId,
+                                                              @RequestBody GardenZoneTrackerEventCreationRequestDTO request){
+
+        return gardenZoneService.recordEvent(gardenId, gardenZoneId, request);
     }
 }
