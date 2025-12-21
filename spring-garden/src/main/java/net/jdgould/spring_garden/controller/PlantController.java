@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,20 +42,23 @@ public class PlantController {
 
     //Create plant
     @PostMapping("")
-    public PlantCreationResponseDTO createPlant(@PathVariable("gardenId") Long gardenId,
+    public ResponseEntity<PlantCreationResponseDTO> createPlant(@PathVariable("gardenId") Long gardenId,
                                                 @PathVariable("gardenZoneId") Long gardenZoneId,
                                                 @RequestBody PlantCreationRequestDTO request) {
-        return plantService.addPlantToGardenZone(gardenId, gardenZoneId, request);
+        PlantCreationResponseDTO response = plantService.addPlantToGardenZone(gardenId, gardenZoneId, request);
+        URI location = URI.create("/api/gardens/" + gardenId + "/zones/" + gardenZoneId + "/plants/" + response.plantId());
+        return ResponseEntity.created(location).body(response);
     }
 
     //Record tracker event
     @PostMapping("/{plantId}/tracker")
-    public TrackerEventCreationResponseDTO createTrackerEvent(@PathVariable("gardenId") Long gardenId,
+    public ResponseEntity<TrackerEventCreationResponseDTO> createTrackerEvent(@PathVariable("gardenId") Long gardenId,
                                                               @PathVariable("gardenZoneId") Long gardenZoneId,
                                                               @PathVariable("plantId") Long plantId,
                                                               @RequestBody PlantTrackerEventCreationRequestDTO request) {
-        return plantService.recordEvent(gardenId, gardenZoneId, plantId, request);
-
+        TrackerEventCreationResponseDTO response = plantService.recordEvent(gardenId, gardenZoneId, plantId, request);
+        URI location = URI.create("/api/gardens/" + gardenId + "/zones/" + gardenZoneId + "/plants/" + plantId + "/tracker/" + request.plantTrackerEventType() + "/latest");
+        return ResponseEntity.created(location).body(response);
     }
 
     //Get full tracker event history

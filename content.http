@@ -28,7 +28,7 @@ Content-Type: application/json
 GET http://localhost:8080/api/gardens/1/zones/1/plants/1/tracker/WATER/latest
 
 ### Get latest garden zone tracker event
-GET http://localhost:8080/api/gardens/1/zones/1/tracker/WEED/latest
+GET http://localhost:8080/api/gardens/1/zones/1/tracker/TEST_SOIL_MOISTURE/latest
 
 ### Record a plant tracker event
 POST http://localhost:8080/api/gardens/1/zones/1/plants/1/tracker

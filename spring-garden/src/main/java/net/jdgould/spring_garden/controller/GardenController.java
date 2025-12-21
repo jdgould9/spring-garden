@@ -7,9 +7,11 @@ import net.jdgould.spring_garden.service.GardenService;
 import net.jdgould.spring_garden.service.GardenZoneService;
 import net.jdgould.spring_garden.service.PlantService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -35,7 +37,9 @@ public class GardenController {
 
     //Create garden
     @PostMapping("")
-    public GardenCreationResponseDTO createGarden(@RequestBody GardenCreationRequestDTO request) {
-        return gardenService.addGarden(request);
+    public ResponseEntity<GardenCreationResponseDTO> createGarden(@RequestBody GardenCreationRequestDTO request) {
+        GardenCreationResponseDTO response = gardenService.addGarden(request);
+        URI location = URI.create("/api/gardens/" + response.gardenId());
+        return ResponseEntity.created(location).body(response);
     }
 }

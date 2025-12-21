@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,17 +42,21 @@ public class GardenZoneController {
 
     //Create garden zone
     @PostMapping("")
-    public GardenZoneCreationResponseDTO createGardenZone(@PathVariable("gardenId") Long gardenId, @RequestBody GardenZoneCreationRequestDTO request) {
-        return gardenZoneService.addGardenZoneToGarden(gardenId, request);
+    public ResponseEntity<GardenZoneCreationResponseDTO> createGardenZone(@PathVariable("gardenId") Long gardenId, @RequestBody GardenZoneCreationRequestDTO request) {
+        GardenZoneCreationResponseDTO response = gardenZoneService.addGardenZoneToGarden(gardenId, request);
+        URI location = URI.create("/api/gardens/" + gardenId + "/zones/" + response.gardenZoneId());
+        return ResponseEntity.created(location).body(response);
     }
 
     //Record tracker event
     @PostMapping("{gardenZoneId}/tracker")
-    public TrackerEventCreationResponseDTO createTrackerEvent(@PathVariable("gardenId") Long gardenId,
+    public ResponseEntity<TrackerEventCreationResponseDTO> createTrackerEvent(@PathVariable("gardenId") Long gardenId,
                                                               @PathVariable("gardenZoneId") Long gardenZoneId,
                                                               @RequestBody GardenZoneTrackerEventCreationRequestDTO request) {
 
-        return gardenZoneService.recordEvent(gardenId, gardenZoneId, request);
+        TrackerEventCreationResponseDTO response = gardenZoneService.recordEvent(gardenId, gardenZoneId, request);
+        URI location = URI.create("/api/gardens/" + gardenId + "/zones/" + gardenZoneId + "/tracker/" + request.gardenZoneTrackerEventType() + "/latest");
+        return ResponseEntity.created(location).body(response);
     }
 
     //Get full tracker event history
