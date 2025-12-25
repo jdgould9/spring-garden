@@ -6,7 +6,6 @@ import java.util.List;
 
 public record GardenZoneGetResponseDTO(Long gardenZoneId,
                                        String gardenZoneName,
-//                                       GardenZoneTrackerDTO gardenZoneTracker,
                                        List<PlantSummaryDTO> plants
 ) {
 }

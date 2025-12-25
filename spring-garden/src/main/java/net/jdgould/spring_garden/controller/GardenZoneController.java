@@ -19,18 +19,6 @@ public class GardenZoneController {
         this.gardenZoneService = gardenZoneService;
     }
 
-    //Get all garden zones in a garden
-    @GetMapping("")
-    public List<GardenZoneGetResponseDTO> getAllGardenZonesInGarden(@PathVariable("gardenId") Long gardenId) {
-        return gardenZoneService.findAllGardenZonesInGarden(gardenId);
-    }
-
-    //Get garden zone by garden Id and garden zone Id
-    @GetMapping("/{gardenZoneId}")
-    public GardenZoneGetResponseDTO getGardenZoneById(@PathVariable("gardenId") Long gardenId, @PathVariable("gardenZoneId") Long gardenZoneId) {
-        return gardenZoneService.findGardenZoneById(gardenZoneId, gardenId);
-    }
-
     //Create garden zone
     @PostMapping("")
     public ResponseEntity<GardenZoneCreationResponseDTO> createGardenZone(@PathVariable("gardenId") Long gardenId, @RequestBody GardenZoneCreationRequestDTO request) {
@@ -38,6 +26,26 @@ public class GardenZoneController {
         URI location = URI.create("/api/gardens/" + gardenId + "/zones/" + response.gardenZoneId());
         return ResponseEntity.created(location).body(response);
     }
+
+    //Get all garden zones in a garden
+    @GetMapping("")
+    public List<GardenZoneGetResponseDTO> getAllGardenZonesInGarden(@PathVariable("gardenId") Long gardenId) {
+        return gardenZoneService.findAllGardenZonesInGarden(gardenId);
+    }
+
+    //Get garden zone
+    @GetMapping("/{gardenZoneId}")
+    public GardenZoneGetResponseDTO getGardenZoneById(@PathVariable("gardenId") Long gardenId, @PathVariable("gardenZoneId") Long gardenZoneId) {
+        return gardenZoneService.findGardenZoneById(gardenZoneId, gardenId);
+    }
+
+    //Delete garden zone
+    @DeleteMapping("/{gardenZoneId}")
+    public ResponseEntity<Void> deleteGardenZoneById(@PathVariable("gardenId") Long gardenId, @PathVariable("gardenZoneId") Long gardenZoneId){
+        gardenZoneService.deleteGardenZoneById(gardenZoneId, gardenId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 //    //Record tracker event
 //    @PostMapping("{gardenZoneId}/tracker")

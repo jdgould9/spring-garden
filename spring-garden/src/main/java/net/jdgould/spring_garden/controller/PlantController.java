@@ -19,13 +19,23 @@ public class PlantController {
         this.plantService = plantService;
     }
 
+    //Create plant
+    @PostMapping("")
+    public ResponseEntity<PlantCreationResponseDTO> createPlant(@PathVariable("gardenId") Long gardenId,
+                                                                @PathVariable("gardenZoneId") Long gardenZoneId,
+                                                                @RequestBody PlantCreationRequestDTO request) {
+        PlantCreationResponseDTO response = plantService.addPlantToGardenZone(gardenId, gardenZoneId, request);
+        URI location = URI.create("/api/gardens/" + gardenId + "/zones/" + gardenZoneId + "/plants/" + response.plantId());
+        return ResponseEntity.created(location).body(response);
+    }
+
     //Get all plants in a garden zone
     @GetMapping("")
     public List<PlantGetResponseDTO> getAllPlantsInGardenZone(@PathVariable("gardenId") Long gardenId, @PathVariable("gardenZoneId") Long gardenZoneId) {
         return plantService.findAllPlantsInZone(gardenId, gardenZoneId);
     }
 
-    //Get plant by plant Id and garden zone Id and garden Id
+    //Get plant
     @GetMapping("/{plantId}")
     public PlantGetResponseDTO getPlantById(@PathVariable("gardenId") Long gardenId,
                                             @PathVariable("gardenZoneId") Long gardenZoneId,
@@ -33,15 +43,17 @@ public class PlantController {
         return plantService.findPlantInZoneById(gardenId, gardenZoneId, plantId);
     }
 
-    //Create plant
-    @PostMapping("")
-    public ResponseEntity<PlantCreationResponseDTO> createPlant(@PathVariable("gardenId") Long gardenId,
+    //Delete plant
+    @DeleteMapping("/{plantId}")
+    public ResponseEntity<Void> deletePlantById(@PathVariable("gardenId") Long gardenId,
                                                 @PathVariable("gardenZoneId") Long gardenZoneId,
-                                                @RequestBody PlantCreationRequestDTO request) {
-        PlantCreationResponseDTO response = plantService.addPlantToGardenZone(gardenId, gardenZoneId, request);
-        URI location = URI.create("/api/gardens/" + gardenId + "/zones/" + gardenZoneId + "/plants/" + response.plantId());
-        return ResponseEntity.created(location).body(response);
+                                                @PathVariable("plantId") Long plantId){
+        plantService.deletePlantById(gardenId, gardenZoneId, plantId);
+        return ResponseEntity.noContent().build();
     }
+
+
+
 //
 //    //Record tracker event
 //    @PostMapping("/{plantId}/tracker")

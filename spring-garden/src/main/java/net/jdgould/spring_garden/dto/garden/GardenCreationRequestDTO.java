@@ -1,4 +1,7 @@
 package net.jdgould.spring_garden.dto.garden;
 
-public record GardenCreationRequestDTO(String gardenName) {
+import jakarta.validation.constraints.NotBlank;
+
+public record GardenCreationRequestDTO(
+        @NotBlank String gardenName) {
 }

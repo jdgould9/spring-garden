@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface GardenZoneRepository extends JpaRepository<GardenZone, Long> {
     List<GardenZone> findAllByGarden(Garden garden);
 
-    Optional<GardenZone> findByGardenZoneIdAndGarden(Long gardenZoneId, Garden garden);
+    Optional<GardenZone> findGardenZoneByIdAndGarden(Long gardenZoneId, Garden garden);
 }

@@ -8,6 +8,16 @@ Content-Type: application/json
     "gardenName":"Garden 1"
 }
 
+### Patch garden 1
+PATCH http://localhost:8080/api/gardens/1
+Content-Type: application/json
+
+{
+    "gardenName":"A"
+}
+
+
+
 ### Add a zone 1 to garden 1
 POST http://localhost:8080/api/gardens/1/zones
 Content-Type: application/json
@@ -17,75 +27,24 @@ Content-Type: application/json
 }
 
 ### Add a plant 1 to zone 1 in garden 1
-POST http://localhost:8080/api/gardens/1/zones/1/plants
+POST http://localhost:8080/api/gardens/1/zones/2/plants
 Content-Type: application/json
 
 {
-    "plantName":"Plant 1 in zone 1 in garden 1"
+    "plantName":"Plant 3 in zone 2 in garden 1"
 }
 
-### Get latest tracker event
-GET http://localhost:8080/api/gardens/1/zones/1/plants/1/tracker/WATER/latest
+### Delete a garden
+DELETE http://localhost:8080/api/gardens/1
 
-### Get latest garden zone tracker event
-GET http://localhost:8080/api/gardens/1/zones/1/tracker/TEST_SOIL_MOISTURE/latest
+### Delete a garden zone
+DELETE http://localhost:8080/api/gardens/1/zones/2
 
-### Record a plant tracker event
-POST http://localhost:8080/api/gardens/1/zones/1/plants/1/tracker
-Content-Type: application/json
+### Delete a plant
+DELETE http://localhost:8080/api/gardens/1/zones/2/plants/3
 
-{
-    "plantTrackerEventType":"PEST_TREATMENT",
-    "details":"3: I pest treateded my plant!!!"
-}
-
-### Record another plant tracker event
-POST http://localhost:8080/api/gardens/1/zones/1/plants/1/tracker
-Content-Type: application/json
-
-{
-    "plantTrackerEventType":"WATER",
-    "details":"2: I watered my plant!!!"
-}
-
-### Record 1 garden zone tracker event
-POST http://localhost:8080/api/gardens/1/zones/1/tracker
-Content-Type: application/json
-
-{
-    "gardenZoneTrackerEventType":"TEST_SOIL_MOISTURE",
-    "details":"1: I tested my soil moisture."
-}
-
-### Record 2 garden zone tracker event
-POST http://localhost:8080/api/gardens/1/zones/1/tracker
-Content-Type: application/json
-
-{
-    "gardenZoneTrackerEventType":"TEST_SOIL_PH",
-    "details":"2: I tested my soil pH."
-}
-
-### Record 3 garden zone tracker event
-POST http://localhost:8080/api/gardens/1/zones/1/tracker
-Content-Type: application/json
-
-{
-    "gardenZoneTrackerEventType":"WEED",
-    "details":"3: i weeded my garden zone."
-}
-
-### Record a garden zone tracker event
-POST http://localhost:8080/api/gardens/1/zones/1/tracker
-Content-Type: application/json
-
-{
-    "gardenZoneTrackerEventType":"TEST_SOIL_MOISTURE",
-    "details":"I tested my soil moisture again."
-}
-
-
-
+###Get a garden
+GET http://localhost:8080/api/gardens/1
 
 ###Garden 2
 
@@ -98,7 +57,7 @@ Content-Type: application/json
 }
 
 ### Add a zone 1 to garden 2
-POST http://localhost:8080/api/gardens/2/zones
+POST http://localhost:8080/api/gardens/4/zones
 Content-Type: application/json
 
 {
@@ -106,7 +65,7 @@ Content-Type: application/json
 }
 
 ### Add a plant 1 to zone 1 in garden 2
-POST http://localhost:8080/api/gardens/2/zones/2/plants
+POST http://localhost:8080/api/gardens/4/zones/5/plants
 Content-Type: application/json
 
 {

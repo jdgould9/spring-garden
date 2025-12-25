@@ -1,37 +1,35 @@
+//TrackerEvent.java
 package net.jdgould.spring_garden.model.tracker;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-//TrackerEvent is individual tracker assignment events
+
 @Entity
+@Table(name="tracker_event")
 public class TrackerEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tracker_event_id")
     private Long trackerEventId;
 
     @ManyToOne
+    @JoinColumn(name = "tracker_assignment_id", nullable = false)
     private TrackerAssignment trackerAssignment;
 
-    @Column(nullable = false)
-    private LocalDateTime actionTime;
-
+    @Column(name = "details")
     private String details;
 
-    protected TrackerEvent() {}
+    @Column(name = "event_recorded_time", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime recordedTime;
 
-    public TrackerEvent(LocalDateTime actionTime, String details) {
-        this.actionTime = actionTime;
-        this.details = details;
+    protected TrackerEvent() {
     }
 
-    public LocalDateTime getActionTime() { return actionTime; }
-    public String getDetails() { return details; }
-
-    public static Optional<TrackerEvent> getMostRecentEvent(List<TrackerEvent> history) {
-        if (history == null || history.isEmpty()) return Optional.empty();
-        return Optional.of(history.getLast());
+    public TrackerEvent(TrackerAssignment trackerAssignment, String details) {
+        this.trackerAssignment = trackerAssignment;
+        this.details = details;
     }
 }
