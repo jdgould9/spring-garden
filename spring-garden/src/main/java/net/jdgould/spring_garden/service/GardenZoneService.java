@@ -26,6 +26,8 @@ public class GardenZoneService {
     public GardenZoneCreationResponseDTO addGardenZoneToGarden(Long gardenId, GardenZoneCreationRequestDTO requestDTO) {
         Garden garden = gardenService.findGardenEntityById(gardenId);
         GardenZone savedGardenZone = gardenZoneRepository.save(new GardenZone(garden, requestDTO.gardenZoneName()));
+        garden.addGardenZone(savedGardenZone);
+
         return new GardenZoneCreationResponseDTO(savedGardenZone.getId());
     }
 
@@ -41,8 +43,11 @@ public class GardenZoneService {
     }
 
     public void deleteGardenZoneById(Long gardenZoneId, Long gardenId){
+        Garden garden = gardenService.findGardenEntityById(gardenId);
         GardenZone gardenZone = findGardenZoneEntityById(gardenZoneId, gardenId);
+
         gardenZoneRepository.delete(gardenZone);
+        garden.removeGardenZone(gardenZone);
     }
 
     public GardenZoneGetResponseDTO updateGardenZoneById(Long gardenZoneId, Long gardenId, GardenZoneUpdateRequestDTO request){

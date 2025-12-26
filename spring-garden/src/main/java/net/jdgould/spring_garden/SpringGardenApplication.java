@@ -20,13 +20,11 @@ public class SpringGardenApplication {
     //TODO:
     //  Implement testing
     //TODO:
-    //  Continue trackable restructure
-    //TODO:
-    //  Implement reminder/notification scheduling mechanism
-    //TODO:
     //  Data validation w/ jakarta.validation
     //TODO:
     //  Normalize parameter order in methods across controllers + services
+    //TODO:
+    //  TrackerPolicy implementation
 
 
     @Bean

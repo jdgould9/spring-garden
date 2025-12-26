@@ -66,6 +66,7 @@ public class GardenService {
     }
 
     protected Garden findGardenEntityById(Long gardenId) {
-        return gardenRepository.findById(gardenId).orElseThrow(() -> new GardenNotFoundException("Garden not found with id: " + gardenId));
+        return gardenRepository.findById(gardenId)
+                .orElseThrow(() -> new GardenNotFoundException("Garden not found with id: " + gardenId));
     }
 }

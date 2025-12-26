@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tracker_assignment")
@@ -14,9 +16,12 @@ public class TrackerAssignment {
     @Column(name = "tracker_assignment_id")
     private Long trackerAssignmentId;
 
+    @OneToMany(mappedBy = "trackerAssignment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TrackerEvent> trackerEvents = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "tracker_id", nullable = false)
-    private Tracker tracker;
+    private TrackerPolicy trackerPolicy;
 
     @ManyToOne
     @JoinColumn(name = "trackable_id", nullable = false)
@@ -29,8 +34,8 @@ public class TrackerAssignment {
     protected TrackerAssignment() {
     }
 
-    public TrackerAssignment(Tracker tracker, Trackable assignedTo) {
-        this.tracker = tracker;
+    public TrackerAssignment(TrackerPolicy trackerPolicy, Trackable assignedTo) {
+        this.trackerPolicy = trackerPolicy;
         this.assignedTo = assignedTo;
     }
 }

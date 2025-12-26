@@ -24,4 +24,14 @@ public class Garden extends Trackable {
     public List<GardenZone> getGardenZones(){
         return this.gardenZones;
     }
+
+    public void addGardenZone(GardenZone gardenZone){
+        this.gardenZones.add(gardenZone);
+        gardenZone.setGarden(this);
+    }
+
+    public void removeGardenZone(GardenZone gardenZone){
+        this.gardenZones.remove(gardenZone);
+        gardenZone.setGarden(null);
+    }
 }

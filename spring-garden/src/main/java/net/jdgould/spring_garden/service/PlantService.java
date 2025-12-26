@@ -25,8 +25,9 @@ public class PlantService {
 
     public PlantCreationResponseDTO addPlantToGardenZone(Long gardenId, Long gardenZoneId, PlantCreationRequestDTO request) {
         GardenZone gardenZone = gardenZoneService.findGardenZoneEntityById(gardenZoneId, gardenId);
-
         Plant savedPlant = plantRepository.save(new Plant(gardenZone, request.plantName()));
+        gardenZone.addPlant(savedPlant);
+
         return new PlantCreationResponseDTO(savedPlant.getId());
     }
 
@@ -44,8 +45,11 @@ public class PlantService {
     }
 
     public void deletePlantById(Long gardenId, Long gardenZoneId, Long plantId){
+        GardenZone gardenZone = gardenZoneService.findGardenZoneEntityById(gardenZoneId, gardenId);
         Plant plant = findPlantEntityById(gardenId, gardenZoneId, plantId);
+
         plantRepository.delete(plant);
+        gardenZone.removePlant(plant);
     }
 
     public PlantGetResponseDTO updatePlantById(Long gardenId, Long gardenZoneId, Long plantId, PlantUpdateRequestDTO request){
@@ -68,7 +72,6 @@ public class PlantService {
 
         return plantRepository.findPlantByIdAndGardenZone(plantId, gardenZone).orElseThrow(() -> new PlantNotFoundException("Plant not found with id: " + plantId));
     }
-
 }
 
 
