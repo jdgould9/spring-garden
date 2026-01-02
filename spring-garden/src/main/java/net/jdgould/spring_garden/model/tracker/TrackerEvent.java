@@ -18,7 +18,7 @@ public class TrackerEvent {
     @JoinColumn(name = "tracker_assignment_id", nullable = false)
     private TrackerAssignment trackerAssignment;
 
-    @Column(name = "details")
+    @Column(name = "eventDetails")
     private String details;
 
     @Column(name = "event_recorded_time", nullable = false, updatable = false)
@@ -31,5 +31,21 @@ public class TrackerEvent {
     public TrackerEvent(TrackerAssignment trackerAssignment, String details) {
         this.trackerAssignment = trackerAssignment;
         this.details = details;
+    }
+
+    public void setTrackerAssignment(TrackerAssignment trackerAssignment) {
+        this.trackerAssignment = trackerAssignment;
+    }
+
+    public Long getTrackerEventId() {
+        return trackerEventId;
+    }
+
+    public LocalDateTime getRecordedTime() {
+        return recordedTime;
+    }
+
+    public String getDetails() {
+        return details;
     }
 }

@@ -1,3 +1,4 @@
+### --------------------------------------------------GARDEN OPERATIONS--------------------------------------------------
 ### Add a garden
 POST http://localhost:8080/api/gardens
 Content-Type: application/json
@@ -6,53 +7,164 @@ Content-Type: application/json
     "gardenName":"Garden 1"
 }
 
-### Patch garden:1
-PATCH http://localhost:8080/api/gardens/1
+### Add another garden
+POST http://localhost:8080/api/gardens
 Content-Type: application/json
 
 {
-    "gardenName":"A"
+    "gardenName":"Garden 2"
 }
 
+### Get all gardens
+GET http://localhost:8080/api/gardens
 
-### Add a zone to garden:1
+### Get garden by ID
+GET http://localhost:8080/api/gardens/1
+
+### Delete a garden
+DELETE http://localhost:8080/api/gardens/1
+
+### --------------------------------------------------GARDEN ZONE OPERATIONS--------------------------------------------------
+### Add a garden zone
 POST http://localhost:8080/api/gardens/1/zones
 Content-Type: application/json
 
 {
-    "gardenZoneName":"Zone 1 in garden 1"
+    "gardenZoneName":"Zone 1 in Garden 1"
 }
 
-### Patch zone:2
-PATCH http://localhost:8080/api/gardens/1/zones/2
+### Add another garden zone
+POST http://localhost:8080/api/gardens/1/zones
 Content-Type: application/json
 
 {
-    "gardenZoneName":"updatedzzz"
+    "gardenZoneName":"Zone 2 in Garden 1"
 }
 
-### Add a plant to zone:2
-POST http://localhost:8080/api/gardens/1/zones/2/plants
+### Get all garden zones
+GET http://localhost:8080/api/gardens/1/zones
+
+### Get garden zone by ID
+GET http://localhost:8080/api/gardens/1/zones/3
+
+### Delete a garden zone
+DELETE http://localhost:8080/api/gardens/1/zones/3
+
+
+
+
+### --------------------------------------------------PLANT OPERATIONS--------------------------------------------------
+### Add a plant
+POST http://localhost:8080/api/gardens/1/zones/3/plants
 Content-Type: application/json
 
 {
-    "plantName":"Plant 3 in zone 2 in garden 1"
+    "plantName":"Plant 1 in zone 1"
 }
 
-### Patch plant:3
-PATCH http://localhost:8080/api/gardens/1/zones/2/plants/3
+### Add another plant
+POST http://localhost:8080/api/gardens/1/zones/3/plants
 Content-Type: application/json
 
 {
-    "plantName":"fuck 1"
+    "plantName":"Plant 2 in zone 1"
 }
 
-### Delete a garden:1
-DELETE http://localhost:8080/api/gardens/1
+### Get all plants
+GET http://localhost:8080/api/gardens/1/zones
 
-### Delete a zone:2
-DELETE http://localhost:8080/api/gardens/1/zones/2
+### Get plant by ID
+GET http://localhost:8080/api/gardens/1/zones/1
 
-### Delete a plant:3
-DELETE http://localhost:8080/api/gardens/1/zones/2/plants/3
+### Delete a plant
+DELETE http://localhost:8080/api/gardens/1/zones/1
+
+
+
+### --------------------------------------------------TRACKER OPERATIONS--------------------------------------------------
+### Add a tracker
+POST http://localhost:8080/api/trackers
+Content-Type: application/json
+
+{
+    "trackerName":"My first tracker: watering",
+    "description":"Water all the items in these areas",
+    "intervalHours":"48"
+}
+
+
+### Add another tracker
+POST http://localhost:8080/api/trackers
+Content-Type: application/json
+
+{
+    "trackerName":"My second tracker: weed",
+    "description":"Water all the items in these areas",
+    "intervalHours":"24"
+}
+
+### Get all trackers
+GET http://localhost:8080/api/trackers
+
+### Get tracker by ID
+GET http://localhost:8080/api/trackers/1
+
+### Delete a tracker
+DELETE http://localhost:8080/api/trackers/1
+
+### --------------------------------------------------TRACKER ASSIGNMENT OPERATIONS--------------------------------------------------
+### Add a tracker assignment
+POST http://localhost:8080/api/trackers/1/assignments
+Content-Type: application/json
+
+{
+    "trackableId":"1"
+}
+
+### Add another tracker assignment
+POST http://localhost:8080/api/trackers/1/assignments
+Content-Type: application/json
+
+{
+    "trackableId":"3"
+}
+
+### Get all tracker assignments
+GET http://localhost:8080/api/trackers/1/assignments
+
+### Get tracker assignment by ID
+GET http://localhost:8080/api/trackers/1/assignments/1
+
+### Delete a tracker assignment
+DELETE http://localhost:8080/api/trackers/1/assignments/1
+
+### --------------------------------------------------TRACKER EVENT OPERATIONS--------------------------------------------------
+### Add a tracker event
+POST http://localhost:8080/api/trackers/1/assignments/1/events
+Content-Type: application/json
+
+{
+    "eventDetails":"I watered my tomatos"
+}
+
+### Add another tracker event
+POST http://localhost:8080/api/trackers/1/assignments/1/events
+Content-Type: application/json
+
+{
+    "eventDetails":"I watered my cabbages"
+}
+
+### Get all tracker event
+GET http://localhost:8080/api/trackers/1/assignments/1/events
+
+### Get tracker event by ID
+GET http://localhost:8080/api/trackers/1/assignments/1/events/1
+
+### Get latest tracker event
+GET http://localhost:8080/api/trackers/1/assignments/1/events/latest
+
+### Delete a tracker event
+DELETE http://localhost:8080/api/trackers/1/assignments/1/events/1
+
 

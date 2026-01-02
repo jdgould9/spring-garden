@@ -1,4 +1,8 @@
 package net.jdgould.spring_garden.dto.tracker.assignment;
 
-public record TrackerEventGetResponseDTO() {
+import java.time.LocalDateTime;
+
+public record TrackerEventGetResponseDTO(Long trackerEventId,
+                                         LocalDateTime recordedTime,
+                                         String details) {
 }

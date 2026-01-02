@@ -3,6 +3,9 @@ package net.jdgould.spring_garden.model.tracker;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Trackable {
@@ -13,6 +16,9 @@ public abstract class Trackable {
 
     @Column(name = "trackable_name", nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TrackerAssignment> trackerAssignments = new ArrayList<>();
 
     protected Trackable() {
     }
@@ -31,5 +37,10 @@ public abstract class Trackable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void removeTrackerAssignment(TrackerAssignment trackerAssignment){
+        this.trackerAssignments.remove(trackerAssignment);
+        trackerAssignment.setTrackerPolicy(null);
     }
 }

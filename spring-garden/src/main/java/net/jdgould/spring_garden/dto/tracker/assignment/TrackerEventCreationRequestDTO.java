@@ -1,4 +1,4 @@
 package net.jdgould.spring_garden.dto.tracker.assignment;
 
-public record TrackerEventCreationRequestDTO() {
+public record TrackerEventCreationRequestDTO(String eventDetails) {
 }

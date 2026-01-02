@@ -39,6 +39,16 @@ public class TrackerAssignment {
         this.assignedTo = assignedTo;
     }
 
+    public void addTrackerEvent(TrackerEvent trackerEvent){
+        this.trackerEvents.add(trackerEvent);
+        trackerEvent.setTrackerAssignment(this);
+    }
+
+    public void removeTrackerEvent(TrackerEvent trackerEvent){
+        this.trackerEvents.remove(trackerEvent);
+        trackerEvent.setTrackerAssignment(null);
+    }
+
     public void setTrackerPolicy(TrackerPolicy trackerPolicy){
         this.trackerPolicy=trackerPolicy;
     }

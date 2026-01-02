@@ -1,5 +1,8 @@
 package net.jdgould.spring_garden.service;
 
+import net.jdgould.spring_garden.dto.tracker.assignment.TrackerEventCreationRequestDTO;
+import net.jdgould.spring_garden.dto.tracker.assignment.TrackerEventCreationResponseDTO;
+import net.jdgould.spring_garden.dto.tracker.assignment.TrackerEventGetResponseDTO;
 import net.jdgould.spring_garden.dto.tracker.event.TrackerAssignmentCreationRequestDTO;
 import net.jdgould.spring_garden.dto.tracker.event.TrackerAssignmentCreationResponseDTO;
 import net.jdgould.spring_garden.dto.tracker.event.TrackerAssignmentGetResponseDTO;
@@ -7,40 +10,66 @@ import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyCreationRequest
 import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyCreationResponseDTO;
 import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyGetResponseDTO;
 import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyUpdateRequestDTO;
-import net.jdgould.spring_garden.exception.GardenZoneNotFoundException;
-import net.jdgould.spring_garden.exception.TrackableNotFoundException;
-import net.jdgould.spring_garden.exception.TrackerAssignmentNotFoundException;
-import net.jdgould.spring_garden.exception.TrackerPolicyNotFoundException;
-import net.jdgould.spring_garden.model.garden.Garden;
-import net.jdgould.spring_garden.model.gardenzone.GardenZone;
+import net.jdgould.spring_garden.exception.*;
 import net.jdgould.spring_garden.model.tracker.Trackable;
 import net.jdgould.spring_garden.model.tracker.TrackerAssignment;
+import net.jdgould.spring_garden.model.tracker.TrackerEvent;
 import net.jdgould.spring_garden.model.tracker.TrackerPolicy;
 import net.jdgould.spring_garden.repository.TrackableRepository;
 import net.jdgould.spring_garden.repository.TrackerAssignmentRepository;
+import net.jdgould.spring_garden.repository.TrackerEventRepository;
 import net.jdgould.spring_garden.repository.TrackerPolicyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
+//TODO:
+//Let parent set relationship
+//Right now relationship is set in both places for a loto enitites:
+//E.g.:
+/*
+new TrackerEvent(trackerAssignment, ...)
+trackerAssignment.addTrackerEvent(newTrackerEvent);
+ */
+
+//Let trackerAssignment handle it:
+/*
+TrackerEvent newTrackerEvent =
+        new TrackerEvent(request.eventDetails());
+
+trackerAssignment.addTrackerEvent(newTrackerEvent);
+trackerEventRepository.save(newTrackerEvent);
+
+ */
+
+
+//TODO:
+//Avoid loading (parent) entities when not needed?
 
 @Service
-public class TrackerPolicyService {
-    private final TrackableRepository trackableRepository;
+public class TrackerService {
     private final TrackerPolicyRepository trackerPolicyRepository;
     private final TrackerAssignmentRepository trackerAssignmentRepository;
+    private final TrackerEventRepository trackerEventRepository;
+    private final TrackableRepository trackableRepository;
 
-    public TrackerPolicyService(TrackerPolicyRepository trackerPolicyRepository,
-                                TrackerAssignmentRepository trackerAssignmentRepository,
-                                TrackableRepository trackableRepository) {
-        this.trackableRepository = trackableRepository;
+    public TrackerService(TrackerPolicyRepository trackerPolicyRepository,
+                          TrackerAssignmentRepository trackerAssignmentRepository,
+                          TrackerEventRepository trackerEventRepository,
+                          TrackableRepository trackableRepository) {
         this.trackerPolicyRepository = trackerPolicyRepository;
         this.trackerAssignmentRepository = trackerAssignmentRepository;
+        this.trackerEventRepository = trackerEventRepository;
+        this.trackableRepository = trackableRepository;
 
     }
 
+
+
     ///TRACKER POLICY
     public TrackerPolicyCreationResponseDTO addTrackerPolicy(TrackerPolicyCreationRequestDTO request) {
-        TrackerPolicy savedTrackerPolicy = trackerPolicyRepository.save(new TrackerPolicy(request.name(), request.description(), request.intervalHours()));
+        TrackerPolicy savedTrackerPolicy = trackerPolicyRepository.save(new TrackerPolicy(request.trackerName(), request.trackerDescription(), request.intervalHours()));
         return new TrackerPolicyCreationResponseDTO(savedTrackerPolicy.getTrackerPolicyId());
     }
 
@@ -81,15 +110,16 @@ public class TrackerPolicyService {
     public TrackerAssignmentCreationResponseDTO addTrackerAssignment(Long trackerPolicyId, TrackerAssignmentCreationRequestDTO request){
         TrackerPolicy trackerPolicy = findTrackerPolicyEntityById(trackerPolicyId);
         Trackable trackable = findTrackableEntityById(request.trackableId());
-        TrackerAssignment savedTrackerAssignment = trackerAssignmentRepository.save(new TrackerAssignment(trackerPolicy, trackable));
-        trackerPolicy.addTrackerAssignment(savedTrackerAssignment);
+        TrackerAssignment newTrackerAssignment = new TrackerAssignment(trackerPolicy, trackable);
 
-        return new TrackerAssignmentCreationResponseDTO(savedTrackerAssignment.getTrackerAssignmentId());
+        trackerPolicy.addTrackerAssignment(newTrackerAssignment);
+        trackerAssignmentRepository.save(newTrackerAssignment);
+
+        return new TrackerAssignmentCreationResponseDTO(newTrackerAssignment.getTrackerAssignmentId());
     }
 
     public List<TrackerAssignmentGetResponseDTO> findAllTrackerAssignmentsInPolicy(Long trackerPolicyId){
-        TrackerPolicy trackerPolicy = findTrackerPolicyEntityById(trackerPolicyId);
-        return trackerAssignmentRepository.findAllByTrackerPolicy(trackerPolicy).stream()
+        return trackerAssignmentRepository.findAllByTrackerPolicy(findTrackerPolicyEntityById(trackerPolicyId)).stream()
                 .map(this::trackerAssignmentEntityToGetResponseDTO)
                 .toList();
     }
@@ -102,9 +132,49 @@ public class TrackerPolicyService {
     public void deleteTrackerAssignmentById(Long trackerAssignmentId, Long trackerPolicyId){
         TrackerPolicy trackerPolicy = findTrackerPolicyEntityById(trackerPolicyId);
         TrackerAssignment trackerAssignment = findTrackerAssignmentEntityById(trackerAssignmentId, trackerPolicyId);
+        Trackable trackable = findTrackableEntityById(trackerAssignment.getAssignedToId());
+
+        trackable.removeTrackerAssignment(trackerAssignment);
+        trackerPolicy.removeTrackerAssignment(trackerAssignment);
 
         trackerAssignmentRepository.delete(trackerAssignment);
-        trackerPolicy.removeTrackerAssignment(trackerAssignment);
+    }
+
+
+    /// TRACKER EVENTS
+    public TrackerEventCreationResponseDTO addTrackerEvent(Long trackerAssignmentId, Long trackerPolicyId, TrackerEventCreationRequestDTO request){
+        TrackerAssignment trackerAssignment = findTrackerAssignmentEntityById(trackerAssignmentId, trackerPolicyId);
+        TrackerEvent newTrackerEvent = new TrackerEvent(trackerAssignment, request.eventDetails());
+
+        trackerAssignment.addTrackerEvent(newTrackerEvent);
+        trackerEventRepository.save(newTrackerEvent);
+
+        return new TrackerEventCreationResponseDTO(newTrackerEvent.getTrackerEventId(), newTrackerEvent.getRecordedTime());
+    }
+
+    public List<TrackerEventGetResponseDTO> findAllTrackerEventsInAssignment(Long trackerAssignmentId, Long trackerPolicyId) {
+        return trackerEventRepository.findAllByTrackerAssignment(findTrackerAssignmentEntityById(trackerAssignmentId, trackerPolicyId)).stream()
+                .map(this::trackerEventEntityToGetResponseDTO)
+                .toList();
+    }
+
+    public TrackerEventGetResponseDTO findTrackerEventById(Long trackerEventId, Long trackerAssignmentId, Long trackerPolicyId) {
+        return trackerEventEntityToGetResponseDTO(findTrackerEventEntityById(trackerEventId, trackerAssignmentId, trackerPolicyId));
+    }
+
+    public Optional<TrackerEventGetResponseDTO> findMostRecentTrackerEvent(Long trackerPolicyId, Long trackerAssignmentId) {
+        TrackerAssignment trackerAssignment = findTrackerAssignmentEntityById(trackerAssignmentId, trackerPolicyId);
+        return trackerEventRepository
+                .findTopByTrackerAssignmentOrderByRecordedTimeDesc(trackerAssignment)
+                .map(this::trackerEventEntityToGetResponseDTO);
+    }
+
+    public void deleteTrackerEventById(Long trackerEventId, Long trackerAssignmentId, Long trackerPolicyId) {
+        TrackerAssignment trackerAssignment = findTrackerAssignmentEntityById(trackerAssignmentId, trackerPolicyId);
+        TrackerEvent trackerEvent = findTrackerEventEntityById(trackerEventId, trackerAssignmentId, trackerPolicyId);
+
+        trackerAssignment.removeTrackerEvent(trackerEvent);
+        trackerEventRepository.delete(trackerEvent);
     }
 
     /// HELPERS
@@ -126,6 +196,20 @@ public class TrackerPolicyService {
         );
     }
 
+    private TrackerEventGetResponseDTO trackerEventEntityToGetResponseDTO(TrackerEvent trackerEvent){
+        return new TrackerEventGetResponseDTO(
+                trackerEvent.getTrackerEventId(),
+                trackerEvent.getRecordedTime(),
+                trackerEvent.getDetails()
+        );
+    }
+
+    protected TrackerEvent findTrackerEventEntityById(Long trackerEventId, Long trackerAssignmentId, Long trackerPolicyId){
+        TrackerAssignment trackerAssignment = findTrackerAssignmentEntityById(trackerAssignmentId, trackerPolicyId);
+        return trackerEventRepository.findTrackerEventByTrackerEventIdAndTrackerAssignment(trackerEventId, trackerAssignment)
+                .orElseThrow(()->new TrackerEventNotFoundException("Tracker event not found with id: " + trackerEventId));
+    }
+
     protected TrackerPolicy findTrackerPolicyEntityById(Long trackerPolicyId) {
         return trackerPolicyRepository.findById(trackerPolicyId)
                 .orElseThrow(() -> new TrackerPolicyNotFoundException("Tracker policy not found with id: " + trackerPolicyId));
@@ -139,9 +223,6 @@ public class TrackerPolicyService {
 
     protected Trackable findTrackableEntityById(Long trackableId){
         return trackableRepository.findById(trackableId)
-                .orElseThrow(()->new TrackableNotFoundException("Trackable entity (garden, gardenzone, plant) not found" +
-                        "with id: " + trackableId));
+                .orElseThrow(()->new TrackableNotFoundException("Trackable entity (garden, gardenzone, plant) not found with id: " + trackableId));
     }
-
-
 }

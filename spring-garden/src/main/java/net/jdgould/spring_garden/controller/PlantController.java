@@ -62,39 +62,4 @@ public class PlantController {
         PlantGetResponseDTO response = plantService.updatePlantById(gardenId,gardenZoneId,plantId,request);
         return ResponseEntity.ok(response);
     }
-
-
-
-//
-//    //Record tracker event
-//    @PostMapping("/{plantId}/tracker")
-//    public ResponseEntity<TrackerEventCreationResponseDTO> createTrackerEvent(@PathVariable("gardenId") Long gardenId,
-//                                                              @PathVariable("gardenZoneId") Long gardenZoneId,
-//                                                              @PathVariable("plantId") Long plantId,
-//                                                              @RequestBody PlantTrackerEventCreationRequestDTO request) {
-//        TrackerEventCreationResponseDTO response = plantService.recordEvent(gardenId, gardenZoneId, plantId, request);
-//        URI location = URI.create("/api/gardens/" + gardenId + "/zones/" + gardenZoneId + "/plants/" + plantId + "/tracker/" + request.plantTrackerEventType() + "/latest");
-//        return ResponseEntity.created(location).body(response);
-//    }
-//
-//    //Get full tracker event history
-//    @GetMapping("/{plantId}/tracker/{eventType}")
-//    public List<TrackerEventDTO> getTrackerEventHistory(@PathVariable("gardenId") Long gardenId,
-//                                                        @PathVariable("gardenZoneId") Long gardenZoneId,
-//                                                        @PathVariable("plantId") Long plantId,
-//                                                        @PathVariable("eventType") PlantTrackerEventType eventType) {
-//        return plantService.getEventHistory(gardenId, gardenZoneId, plantId, eventType);
-//    }
-//
-//    //Get most recent tracker event
-//    @GetMapping("/{plantId}/tracker/{eventType}/latest")
-//    public ResponseEntity<TrackerEventDTO> getMostRecentTrackerEvent(@PathVariable("gardenId") Long gardenId,
-//                                                                     @PathVariable("gardenZoneId") Long gardenZoneId,
-//                                                                     @PathVariable("plantId") Long plantId,
-//                                                                     @PathVariable("eventType") PlantTrackerEventType eventType) {
-//        return plantService.getMostRecentEvent(gardenId, gardenZoneId, plantId, eventType)
-//                .map(ResponseEntity::ok)
-//                .orElseGet(()->ResponseEntity.noContent().build());
-//    }
-
 }

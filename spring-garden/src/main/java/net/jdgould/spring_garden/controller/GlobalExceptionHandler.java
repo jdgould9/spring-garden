@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
         return e.getMessage();
     }
 
-    @ExceptionHandler(TrackerPolicyNotFoundException.class)
+    @ExceptionHandler(TrackableNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleTrackableNotFound(TrackableNotFoundException e) {
         return e.getMessage();
@@ -37,9 +37,15 @@ public class GlobalExceptionHandler {
         return e.getMessage();
     }
 
-    @ExceptionHandler(TrackerPolicyNotFoundException.class)
+    @ExceptionHandler(TrackerAssignmentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleTrackerAssignmentNotFound(TrackerAssignmentNotFoundException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(TrackerEventNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleTrackerEventNotFound(TrackerEventNotFoundException e) {
         return e.getMessage();
     }
 
