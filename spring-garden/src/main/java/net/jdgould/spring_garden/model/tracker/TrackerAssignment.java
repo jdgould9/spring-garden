@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "tracker_assignment")
+@Table(name = "tracker_assignment",
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {"trackable_id", "tracker_id"}
+        ))
 public class TrackerAssignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

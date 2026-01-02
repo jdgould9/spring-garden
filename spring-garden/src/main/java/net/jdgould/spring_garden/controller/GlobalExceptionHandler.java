@@ -1,9 +1,13 @@
 package net.jdgould.spring_garden.controller;
 
 import net.jdgould.spring_garden.exception.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
+@CrossOrigin
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -49,6 +53,10 @@ public class GlobalExceptionHandler {
         return e.getMessage();
     }
 
-
+    @ExceptionHandler(TrackerAssignmentAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleTrackerAssignmentAlreadyExists(TrackerAssignmentAlreadyExistsException e){
+        return e.getMessage();
+    }
 
 }

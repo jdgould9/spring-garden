@@ -24,36 +24,12 @@ public class SpringGardenApplication {
     //TODO:
     //  Normalize parameter order in methods across controllers + services
     //TODO:
-    //  TrackerPolicy implementation
-
+    //  PROPERLY configure CORS
 
     @Bean
     CommandLineRunner commandLineRunner(PlantRepository repository) {
         return args -> {
-//            System.out.println("Hello.");
-//
-//            Garden g1 = new Garden("My garden");
-//
-//            GardenZone gz1 = new GardenZone(g1, "garden zone 1");
-//            Plant p1 = new Plant(gz1, "rose");
-//            Plant p2 = new Plant(gz1, "lily");
-//
-//            GardenZone gz2 = new GardenZone(g1, "garden zone 2");
-//            Plant p3 = new Plant(gz2, "oak");
-//            Plant p4 = new Plant(gz2, "maple");
-//
 
-//            Tree oak = new Tree("Oak");
-//            Flower rose = new Flower("Sunflower");
-//
-//            // Save them to the database
-//            repository.save(oak);
-//            repository.save(rose);
-//
-//            // Fetch all plants and print
-//            repository.findAll().forEach(plant ->
-//                    System.out.println(plant.getName())
-//            );
         };
     }
 

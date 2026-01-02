@@ -40,9 +40,7 @@ TrackerEvent newTrackerEvent =
 
 trackerAssignment.addTrackerEvent(newTrackerEvent);
 trackerEventRepository.save(newTrackerEvent);
-
  */
-
 
 //TODO:
 //Avoid loading (parent) entities when not needed?
@@ -110,6 +108,12 @@ public class TrackerService {
     public TrackerAssignmentCreationResponseDTO addTrackerAssignment(Long trackerPolicyId, TrackerAssignmentCreationRequestDTO request){
         TrackerPolicy trackerPolicy = findTrackerPolicyEntityById(trackerPolicyId);
         Trackable trackable = findTrackableEntityById(request.trackableId());
+
+        //Check to make sure tracker assignment doesn't already exist
+        if(trackerAssignmentRepository.findTrackerAssignmentByAssignedToAndTrackerPolicy(trackable, trackerPolicy).isPresent()){
+            throw new TrackerAssignmentAlreadyExistsException("Trackable entity " + trackable.getId() + " is already assigned to tracker policy " + trackerPolicyId);
+        }
+
         TrackerAssignment newTrackerAssignment = new TrackerAssignment(trackerPolicy, trackable);
 
         trackerPolicy.addTrackerAssignment(newTrackerAssignment);
