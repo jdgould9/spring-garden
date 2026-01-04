@@ -4,6 +4,7 @@ package net.jdgould.spring_garden.model.garden;
 import jakarta.persistence.*;
 import net.jdgould.spring_garden.model.gardenzone.GardenZone;
 import net.jdgould.spring_garden.model.tracker.Trackable;
+import net.jdgould.spring_garden.model.tracker.TrackableType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,5 +34,10 @@ public class Garden extends Trackable {
     public void removeGardenZone(GardenZone gardenZone){
         this.gardenZones.remove(gardenZone);
         gardenZone.setGarden(null);
+    }
+
+    @Override
+    public TrackableType getTrackableType() {
+        return TrackableType.GARDEN;
     }
 }

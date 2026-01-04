@@ -4,6 +4,7 @@ package net.jdgould.spring_garden.model.plant;
 import jakarta.persistence.*;
 import net.jdgould.spring_garden.model.garden.Garden;
 import net.jdgould.spring_garden.model.tracker.Trackable;
+import net.jdgould.spring_garden.model.tracker.TrackableType;
 import net.jdgould.spring_garden.model.tracker.TrackerEvent;
 import net.jdgould.spring_garden.model.gardenzone.GardenZone;
 
@@ -27,5 +28,10 @@ public class Plant extends Trackable {
 
     public void setGardenZone(GardenZone gardenZone){
         this.gardenZone=gardenZone;
+    }
+
+    @Override
+    public TrackableType getTrackableType() {
+        return TrackableType.PLANT;
     }
 }

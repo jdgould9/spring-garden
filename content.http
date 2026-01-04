@@ -55,7 +55,7 @@ DELETE http://localhost:8080/api/gardens/1/zones/3
 
 ### --------------------------------------------------PLANT OPERATIONS--------------------------------------------------
 ### Add a plant
-POST http://localhost:8080/api/gardens/1/zones/3/plants
+POST http://localhost:8080/api/gardens/1/zones/2/plants
 Content-Type: application/json
 
 {
@@ -63,7 +63,7 @@ Content-Type: application/json
 }
 
 ### Add another plant
-POST http://localhost:8080/api/gardens/1/zones/3/plants
+POST http://localhost:8080/api/gardens/1/zones/2/plants
 Content-Type: application/json
 
 {
@@ -79,7 +79,12 @@ GET http://localhost:8080/api/gardens/1/zones/1
 ### Delete a plant
 DELETE http://localhost:8080/api/gardens/1/zones/1
 
+### --------------------------------------------------TRACKER OPERATIONS--------------------------------------------------
+### Get all trackables
+GET http://localhost:8080/api/trackers/trackables
 
+### Get trackable by ID
+GET http://localhost:8080/api/trackers/trackables/2
 
 ### --------------------------------------------------TRACKER OPERATIONS--------------------------------------------------
 ### Add a tracker
@@ -88,7 +93,7 @@ Content-Type: application/json
 
 {
     "trackerName":"My first tracker: watering",
-    "description":"Water all the items in these areas",
+    "trackerDescription":"Water all the items in these areas",
     "intervalHours":"48"
 }
 
@@ -99,7 +104,7 @@ Content-Type: application/json
 
 {
     "trackerName":"My second tracker: weed",
-    "description":"Water all the items in these areas",
+    "trackerDescription":"Water all the items in these areas",
     "intervalHours":"24"
 }
 

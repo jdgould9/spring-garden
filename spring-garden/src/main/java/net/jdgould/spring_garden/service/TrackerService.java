@@ -10,6 +10,7 @@ import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyCreationRequest
 import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyCreationResponseDTO;
 import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyGetResponseDTO;
 import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyUpdateRequestDTO;
+import net.jdgould.spring_garden.dto.tracker.trackable.TrackableGetResponseDTO;
 import net.jdgould.spring_garden.exception.*;
 import net.jdgould.spring_garden.model.tracker.Trackable;
 import net.jdgould.spring_garden.model.tracker.TrackerAssignment;
@@ -63,6 +64,17 @@ public class TrackerService {
 
     }
 
+    ///TRACKABLE
+    public List<TrackableGetResponseDTO>  findAllTrackables() {
+        return trackableRepository.findAll().stream()
+                .map(this::trackableEntityToGetResponseDTO)
+                .toList();
+    }
+
+    public TrackableGetResponseDTO findTrackableById(Long trackableId) {
+        Trackable trackable = findTrackableEntityById(trackableId);
+        return trackableEntityToGetResponseDTO(trackable);
+    }
 
 
     ///TRACKER POLICY
@@ -182,6 +194,14 @@ public class TrackerService {
     }
 
     /// HELPERS
+    private TrackableGetResponseDTO trackableEntityToGetResponseDTO(Trackable trackable){
+        return new TrackableGetResponseDTO(
+                trackable.getId(),
+                trackable.getName(),
+                trackable.getTrackableType()
+        );
+    }
+
     private TrackerPolicyGetResponseDTO trackerPolicyEntityToGetResponseDTO(TrackerPolicy trackerPolicy) {
         return new TrackerPolicyGetResponseDTO(
                 trackerPolicy.getTrackerPolicyId(),

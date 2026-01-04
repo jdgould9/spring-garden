@@ -26,6 +26,22 @@ public class SpringGardenApplication {
     //TODO:
     //  PROPERLY configure CORS
 
+
+
+
+
+    /// Features (most to least important)
+    //TODO:
+    //  Frontend
+    //TODO:
+    //  Add more useful flavor and functionality to model entities, DTOs
+    //TODO:
+    //  See all events per assignment
+    //TODO:
+    //  See overdue trackers
+    //TODO:
+    //  Role-based user access (admin, gardener, viewer)
+
     @Bean
     CommandLineRunner commandLineRunner(PlantRepository repository) {
         return args -> {

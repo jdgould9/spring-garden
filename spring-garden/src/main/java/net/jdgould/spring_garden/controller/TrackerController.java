@@ -10,6 +10,7 @@ import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyCreationRequest
 import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyCreationResponseDTO;
 import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyGetResponseDTO;
 import net.jdgould.spring_garden.dto.tracker.policy.TrackerPolicyUpdateRequestDTO;
+import net.jdgould.spring_garden.dto.tracker.trackable.TrackableGetResponseDTO;
 import net.jdgould.spring_garden.service.TrackerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,20 @@ public class TrackerController {
 
     public TrackerController(TrackerService trackerService) {
         this.trackerService = trackerService;
+    }
+
+    /// TRACKABLE
+    //Get all trackables
+    @GetMapping("/trackables")
+    public List<TrackableGetResponseDTO> getAllTrackables(){
+        return trackerService.findAllTrackables();
+    }
+
+    //Get a trackable
+    @GetMapping("/trackables/{trackableId}")
+    public TrackableGetResponseDTO getTrackableById(@PathVariable("trackableId") Long trackableId){
+        return trackerService.findTrackableById(trackableId);
+
     }
 
     /// TRACKER POLICY

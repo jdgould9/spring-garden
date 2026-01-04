@@ -27,6 +27,8 @@ public abstract class Trackable {
         this.name = name;
     }
 
+    public abstract TrackableType getTrackableType();
+
     public Long getId() {
         return id;
     }
@@ -43,4 +45,5 @@ public abstract class Trackable {
         this.trackerAssignments.remove(trackerAssignment);
         trackerAssignment.setTrackerPolicy(null);
     }
+
 }
