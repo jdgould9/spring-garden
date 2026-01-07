@@ -1,115 +1,273 @@
-// const gardenBtn = document.querySelector("#displaygardens");
-// const trackerBtn=document.querySelector("#displaytrackers")
-// const createGardenBtn = document.querySelector("#postgarden")
-// gardenBtn.addEventListener("click", displayGardenInfo);
-// createGardenBtn.addEventListener("click", createRandomGarden);
-// trackerBtn.addEventListener("click", displayTrackerInfo);
-// const output = document.querySelector("ul");
+//--CLASS DECLARATIONS--
+class Garden{
+    constructor(gardenId, gardenName){
+        this.gardenId=gardenId;
+        this.gardenName=gardenName;
+        this.gardenZones=[]
+    }
+}
 
-// async function createRandomGarden(){
-//     try{
-//         const response = await fetch('http://localhost:8080/api/gardens', {
-//             method:'POST',
-//             headers:{
-//                 "Content-Type": "application/json",
-//             },
-//             body: JSON.stringify({gardenName:String(Math.random())})
-//         });
-//         if(!response.ok){
-//             throw new Error(`Response status: ${response.status}`);
-//         }
-//         console.log(response);
+class GardenZone{
+    constructor(gardenZoneId, gardenZoneName){
+        this.gardenZoneId = gardenZoneId;
+        this.gardenZoneName=gardenZoneName;
+        this.plants=[]
+    }
+}
 
-//     }
-//     catch(error){
-//         console.error(error.message);
-//     }
-// }
+class Plant{
+    constructor(plantId, plantName){
+        this.plantId=plantId;
+        this.plantName=plantName;
+    }
+}
 
+class TrackerPolicy{
+    constructor(trackerPolicyId, trackerPolicyName, trackerPolicyDescription,
+        trackerPolicyTargetType, trackerPolicyInterval){
+            this.trackerPolicyId=trackerPolicyId;
+            this.trackerPolicyName=trackerPolicyName;
+            this.trackerPolicyDescription=trackerPolicyDescription;
+            this.trackerPolicyTargetType=trackerPolicyTargetType;
+            this.trackerPolicyInterval=trackerPolicyInterval;
+            this.trackerPolicyAssignments=[];
+        }
+}
 
-// async function displayGardenInfo(){
-//     try{
-//         const response = await fetch('http://localhost:8080/api/gardens');
-//         if(!response.ok){
-//             throw new Error(`Response status: ${response.status}`);
-//         }
-//         const gardens = await response.json();
-//         console.log(gardens);
+//--GLOBAL VARIABLES--
+let gardens=[];
+let trackerPolicies=[];
 
-//         output.innerHTML='';
+//--INITIALIZATION--    
+//Fetches all gardens and tracker policies
+async function fetchInitialInfo(){
+    try{
+        const gardenResponse = await fetch("http://localhost:8080/api/gardens");
+        if(!gardenResponse.ok){
+            throw new Error("Could not fetch gardens info");
+        }
+        const trackerPolicyResponse = await fetch("http://localhost:8080/api/trackers");
+        if(!trackerPolicyResponse.ok){
+            throw new Error("Could not fetch tracker policy info");
+        }
 
-//         for(const garden of gardens){
-//             const gardenId = document.createElement("li");
-//             gardenId.textContent=garden['gardenId']
-//             output.appendChild(gardenId);
+        const gardenJson=await gardenResponse.json();
+        const trackerPoliciesJson= await trackerPolicyResponse.json();
 
-//             const gardenInfo = document.createElement("ul");
-//             output.appendChild(gardenInfo);
-//             const gardenName = document.createElement("li");
-//             gardenName.textContent=garden['gardenName'];
-//             gardenInfo.appendChild(gardenName);
-
-//             for(const gardenZone of garden['gardenZones']){
-//                 const gardenZoneId = document.createElement("li");
-//                 gardenZoneId.textContent=gardenZone['gardenZoneId'];
-//                 gardenInfo.appendChild(gardenZoneId);
-
-//                 const gardenZoneName = document.createElement("li");
-//                 gardenZoneName.textContent=gardenZone['gardenZoneName'];
-//                 gardenInfo.appendChild(gardenZoneName);
-
-//             }
+        console.log("JSONS...");
         
-//         }
-//     }
-//     catch(error){
-//         console.error(error.message);
-//     }
-// }
+        console.log(gardenJson);
+        console.log(trackerPoliciesJson);
+        
+        return [gardenJson, trackerPoliciesJson];
+    }
+    catch(error){
+        console.error(error.message);
+    }
+}
 
-// async function displayTrackerInfo(){
-//         try{
-//         const response = await fetch('http://localhost:8080/api/trackers');
-//         if(!response.ok){
-//             throw new Error(`Response status: ${response.status}`);
-//         }
-//         const trackers = await response.json();
-//         console.log(trackers);
+//Populates gardens and tracker policies
+function populateInitialInfo(gardensJson, trackerPoliciesJson){
+    //Garden + zone info
+    for(const gardenJson of gardensJson){
+        const newGarden = gardenJsonToObject(gardenJson);
+        for(const gardenZone of gardenJson["gardenZones"]){
+            const newGardenZone=gardenZoneJsonToObject(gardenZone);
+            newGarden.gardenZones.push(newGardenZone);
+        }
+        gardens.push(newGarden);
+    }
 
-//         output.innerHTML='';
+    //Policy info
+    for(const trackerPolicyJson of trackerPoliciesJson){
+        const newTrackerPolicy = trackerPolicyJsonToObject(trackerPolicyJson);
+        trackerPolicies.push(newTrackerPolicy);
+    }
+}
 
-//         for(const tracker of trackers){
-//             const trackerPolicyIOd = document.createElement("li");
-//             trackerPolicyIOd.textContent=tracker['trackerPolicyId']
-//             output.appendChild(trackerPolicyIOd);
+//Populates nav bar from garden and tracker policy global variables
+function populateNavBar(){
+    const gardensNavList = document.querySelector("#gardensNavList");
 
-//             const trackerInfo = document.createElement("ul");
-//             output.appendChild(trackerInfo);
+    for (const garden of gardens) {
+        const gardenLi = document.createElement("li");
+        gardenLi.textContent = garden.gardenName;
 
-//             const trackerName = document.createElement("li");
-//             trackerName.textContent=tracker['name'];
-//             trackerInfo.appendChild(trackerName);
+        const zonesUl = document.createElement("ul");
 
-//             const trackerIntervalHours = document.createElement("li");
-//             trackerIntervalHours.textContent=tracker['intervalHours'];
-//             trackerInfo.appendChild(trackerIntervalHours);
+        for (const gardenZone of garden.gardenZones) {
+            const zoneLi = document.createElement("li");
+            zoneLi.textContent = gardenZone.gardenZoneName;
+            zonesUl.appendChild(zoneLi);
+        }
 
-//             const trackerDescription = document.createElement("li");
-//             trackerDescription.textContent=tracker['description'];
-//             trackerInfo.appendChild(trackerDescription);
+        gardenLi.appendChild(zonesUl);   // nest zones under garden
+        gardensNavList.appendChild(gardenLi);
+    }
 
-//             const trackerCreationDate = document.createElement("li");
-//             trackerCreationDate.textContent=tracker['creationTime'];
-//             trackerInfo.appendChild(trackerCreationDate);
-//         }
-//     }
-//     catch(error){
-//         console.error(error.message);
-//     }
-// }
+    const trackersNavList=document.querySelector("#trackersNavList");
+
+    //garden
+    const gardenTrackers = trackerPolicies.filter((tracker)=>tracker.trackerPolicyTargetType=="GARDEN");
+    const gardenTrackerTitleLi = document.createElement("li");
+    gardenTrackerTitleLi.textContent="Garden";
+    trackersNavList.appendChild(gardenTrackerTitleLi);
+
+    const gardenTrackerUl = document.createElement("ul");
+    trackersNavList.appendChild(gardenTrackerUl);
+    for(const gardenTracker of gardenTrackers){
+        const gardenTrackerLi = document.createElement("li");
+        gardenTrackerLi.textContent=gardenTracker.trackerPolicyName;
+        gardenTrackerUl.appendChild(gardenTrackerLi);
+    }
+
+    //zone
+    const gardenZoneTrackers = trackerPolicies.filter((tracker)=>tracker.trackerPolicyTargetType=="GARDENZONE");
+    const gardenZoneTrackerTitleLi = document.createElement("li");
+    gardenZoneTrackerTitleLi.textContent="Garden zone";
+    trackersNavList.appendChild(gardenZoneTrackerTitleLi);
+
+    const gardenZoneTrackerUl = document.createElement("ul");
+    trackersNavList.appendChild(gardenZoneTrackerUl);
+    for(const gardenZoneTracker of gardenZoneTrackers){
+        const gardenZoneTrackerLi = document.createElement("li");
+        gardenZoneTrackerLi.textContent=gardenZoneTracker.trackerPolicyName;
+        gardenZoneTrackerUl.appendChild(gardenZoneTrackerLi);
+    }
+
+    //plant
+    const plantTrackers = trackerPolicies.filter((tracker)=>tracker.trackerPolicyTargetType=="PLANT");
+    const plantTrackerTitleLi = document.createElement("li");
+    plantTrackerTitleLi.textContent="Plant";
+    trackersNavList.appendChild(plantTrackerTitleLi);
+
+    const plantTrackerUl = document.createElement("ul");
+    trackersNavList.appendChild(plantTrackerUl);
+    for(const plantTracker of plantTrackers){
+        const plantTrackerLi = document.createElement("li");
+        plantTrackerLi.textContent=plantTracker.trackerPolicyName;
+        plantTrackerUl.appendChild(plantTrackerLi);
+    }
+}
+
+async function init(){
+    const[gardensJson, trackerPoliciesJson] = await fetchInitialInfo();
+    populateInitialInfo(gardensJson, trackerPoliciesJson);
+    console.log("OBJECTS...");
+    console.log("Gardens:", gardens);
+    console.log("Tracker Policies:", trackerPolicies);
+
+
+    populateNavBar(gardens, trackerPolicies);
+
+
+}
+
+init();
+
+
+
+//--MAPPERS--
+function gardenJsonToObject(gardenJson){
+    return new Garden(
+        gardenJson["gardenId"],
+        gardenJson["gardenName"]
+    );
+}
+
+function gardenZoneJsonToObject(gardenZoneJson){
+    return new GardenZone(
+        gardenZoneJson["gardenZoneId"],
+        gardenZoneJson["gardenZoneName"]
+    );
+}
+
+function plantJsonToObject(plantJson){
+    return new Plant(
+        plantJson["plantId"],
+        plantJson["plantName"]
+    );
+
+}
+
+function trackerPolicyJsonToObject(trackerPolicyJson){
+    return new TrackerPolicy(
+        trackerPolicyJson["trackerPolicyId"],
+        trackerPolicyJson["name"],
+        trackerPolicyJson["description"],
+        trackerPolicyJson["targetType"],
+        trackerPolicyJson["intervalHours"]
+    );
+}
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Nav
+    //Garden
+        //Click: Garden name
+        //Click: Zone name
+    //Tracking
+        //Click: Tracker policy
+    
+    //Create
+        //Click: create garden
+        //Click: create tracker
+
+
+//Main
+    //GARDEN, GARDENZONE
+        //Subentity list
+            //Foreach subentity:
+                //Click: view subentity
+                //Click: delete subentity
+
+        //Assigned tracker list
+            //Foreach policy:
+                //Click: view policy
+                //Click: detach policy
+                //Click: record event
+
+        //Click: attach policy
+
+    //PLANT
+        //Assigned tracker list
+            //Foreach policy:
+                //Click: view policy
+                //Click: detach policy
+                //Click: record event
+
+        //Click: attach policy
+        
+
+
+
+    //POLICY ENTITY
+        //Assignment list
+            //Foreach assignment:
+                //Click: view assignment entity
+                //Click: detach assignment
+
+        //Click: attach assignment
+
+
+
+//Aside
+    //ENTITY, POLICY
+        //Click: edit entity/policy details
+        //Click: delete entity/policy
 
 

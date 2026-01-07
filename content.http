@@ -41,6 +41,14 @@ Content-Type: application/json
     "gardenZoneName":"Zone B"
 }
 
+### Add a garden zone
+POST http://localhost:8080/api/gardens/2/zones
+Content-Type: application/json
+
+{
+    "gardenZoneName":"Zone D"
+}
+
 ### Get all garden zones
 GET http://localhost:8080/api/gardens/1/zones
 
@@ -55,7 +63,7 @@ DELETE http://localhost:8080/api/gardens/1/zones/3
 
 ### --------------------------------------------------PLANT OPERATIONS--------------------------------------------------
 ### Add a plant
-POST http://localhost:8080/api/gardens/1/zones/2/plants
+POST http://localhost:8080/api/gardens/1/zones/3/plants
 Content-Type: application/json
 
 {
@@ -63,7 +71,7 @@ Content-Type: application/json
 }
 
 ### Add another plant
-POST http://localhost:8080/api/gardens/1/zones/2/plants
+POST http://localhost:8080/api/gardens/1/zones/3/plants
 Content-Type: application/json
 
 {
@@ -71,7 +79,7 @@ Content-Type: application/json
 }
 
 ### Get all plants
-GET http://localhost:8080/api/gardens/1/zones/2/plants
+GET http://localhost:8080/api/gardens/1/zones/3/plants
 
 ### Get plant by ID
 GET http://localhost:8080/api/gardens/1/zones/2/plants/3
@@ -110,6 +118,17 @@ Content-Type: application/json
     "intervalHours":"24"
 }
 
+### Add another tracker
+POST http://localhost:8080/api/trackers
+Content-Type: application/json
+
+{
+    "trackerName":"Policy C",
+    "trackerDescription":"Policy C Description",
+    "targetType":"GARDENZONE",
+    "intervalHours":"36"
+}
+
 ### Get all trackers
 GET http://localhost:8080/api/trackers
 
@@ -125,7 +144,7 @@ POST http://localhost:8080/api/trackers/1/assignments
 Content-Type: application/json
 
 {
-    "trackableId":"3"
+    "trackableId":"5"
 }
 
 ### Add a tracker assignment (invalid)
@@ -133,7 +152,7 @@ POST http://localhost:8080/api/trackers/1/assignments
 Content-Type: application/json
 
 {
-    "trackableId":"1"
+    "trackableId":"6"
 }
 
 ### Add another tracker assignment (invalid)

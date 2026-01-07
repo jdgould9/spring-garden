@@ -4,7 +4,7 @@ import net.jdgould.spring_garden.dto.gardenzone.GardenZoneCreationRequestDTO;
 import net.jdgould.spring_garden.dto.gardenzone.GardenZoneCreationResponseDTO;
 import net.jdgould.spring_garden.dto.gardenzone.GardenZoneGetResponseDTO;
 import net.jdgould.spring_garden.dto.gardenzone.GardenZoneUpdateRequestDTO;
-import net.jdgould.spring_garden.dto.plant.PlantSummaryDTO;
+import net.jdgould.spring_garden.dto.plant.PlantGetResponseDTO;
 import net.jdgould.spring_garden.exception.GardenZoneNotFoundException;
 import net.jdgould.spring_garden.model.garden.Garden;
 import net.jdgould.spring_garden.model.gardenzone.GardenZone;
@@ -61,13 +61,13 @@ public class GardenZoneService {
     private GardenZoneGetResponseDTO entityToGetResponseDTO(GardenZone gardenZone) {
         return new GardenZoneGetResponseDTO(
                 gardenZone.getId(),
-                gardenZone.getName()
-//                gardenZone.getPlants().stream().map(
-//                                p -> new PlantSummaryDTO(
-//                                        p.getId(),
-//                                        p.getName()
-//                                ))
-//                        .toList()
+                gardenZone.getName(),
+                gardenZone.getPlants().stream().map(
+                                p -> new PlantGetResponseDTO(
+                                        p.getId(),
+                                        p.getName()
+                                ))
+                        .toList()
         );
     }
 

@@ -9,22 +9,7 @@
 </head>
 
 <body>
-  <!-- <button id="displaygardens">Display gardens</button>
-
-  <button id="displaytrackers">Display trackers</button>
-
-  <button id="postgarden">Create a garden!</button> -->
-
-
-
   <!-- 
-
-  <p>Output</p>
-  <ul>
-
-  </ul> -->
-
-
   <div id="gardenInterface">
     <section class="selectionSection">
       <label for="gardenSelection">Garden:</label>
@@ -68,12 +53,64 @@
           <option value="" disabled selected>Select a tracker event</option>
         </select>
     </section>
-  </div>
+  </div> -->
+
+  <header>
+    <h1><a>SpringGarden</a></h1>
+  </header>
+
+  <nav>
+    <!-- DIV: Garden/Tracker policy navigation -->
+    <div>
+      <h2>Gardens</h2>
+      <ul id="gardensNavList">
+
+      </ul>
+    </div>
+
+    <div>
+      <h2>Trackers</h2>
+      <ul id="trackersNavList">
+
+      </ul>
+    </div>
+
+
+    <!-- DIV: Navbar Create garden/tracker policy -->
+    <div>
+      <button>+ Create garden</button>
+      <button>+ Create tracker</button>
+    </div>
+  </nav>
 
 
 
 
+  <main>
+    <!-- DIV: Management info -->
+    <div>
+      <h2>Managing:</h2>
+    </div>
 
+
+    <aside>
+      <!-- DIV: Garden/Zone/Plant/Policy details
+       Entity list -->
+      <div>
+        <h3>Details</h3>
+
+      </div>
+
+      <!-- DIV: Garden/Zone/Plant tracker details
+          Policy assignment details 
+     -->
+      <div>
+        <h3>Details</h3>
+
+      </div>
+    </aside>
+
+  </main>
 
 
   <script src="script.js"></script>
